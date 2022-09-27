@@ -54,8 +54,11 @@ class Message(db.Model):
 ## table with details on the vehicle that will have the advert
 class Vehicle(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-
-
+    vehicle_type = db.Column(db.String(120), unique=True, nullable=False) 
+    manufacturer = db.Column(db.String(120), unique=True, nullable=False)
+    model = db.Column(db.String(120), unique=True, nullable=False)
+    space = db.Column(db.Integer, unique=True, nullable=False)
+    
 ## the hire offer business to vehicle owner
 class RequestDetails(db.Model):
 
