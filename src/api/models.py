@@ -9,7 +9,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
-    location = db.Column(db.String(80), unique=False, nullable=False)
+  
     phone_number = db.Column(db.String(40), unique=True, nullable=False)
     role = db.Column(db.String(120), unique=True, nullable=False) #this should only have two options but can be both
     #include logic later that when someone has created an 
@@ -58,29 +58,54 @@ class Vehicle(db.Model):
     vehicle_type = db.Column(db.String(120), unique=True, nullable=False) #e.g. car, bicycle, motorbike 
     manufacturer = db.Column(db.String(120), unique=True, nullable=False)
     model = db.Column(db.String(120), unique=True, nullable=False)
-    advertizing_space = db.Column(db.Integer, unique=True, nullable=False)
+    advertizing_spaces = db.Column(db.Integer, unique=True, nullable=False)
     license_number = db.Column(db.String(40), unique=True, nullable=False)
+    location = db.Column(db.String(80), unique=False, nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "vehicle_type": self.vehicle_type,
+            "manufacturer": self.manufacturer,
+            "model": self.model,
+            "advertizing_spaces": self.advertizing_spaces,
+            "license_number": self.license_number,
+            "location": self.location,
+        }
 
 #business
 class Business(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False, unique=True)
     owner_name = db.Column(db.String, db.ForeignKey('User.name'), nullable=False, unique=True)
+    business_name = db.Column(db.String(120), unique=True, nullable=False)
     business_type = db.Column(db.String(120), unique=True, nullable=False) 
     location = db.Column(db.String(120), unique=True, nullable=False)
     
-    
-## the hire offer business to vehicle owner
-class RequestDetails(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    duration = db.Column(db.Time, unique=False, nullable=False)
-    date = db.Column(db.Date, unique=False, nullable=True)
-    requester_name = db.Column(db.String, db.ForeignKey('User.name'), nullable=False, unique=True)
+    def serialize(self):
+        return {
+            "id": self.id,
+            "business_type": self.business_type,
+            "business_name": self.business_name,
+            "location": self.location,
+        }
 
 # relational table for the listing from the vehicle owner
 class Listing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    duration = db.Column(db.Time, unique=False, nullable=False)
+    date = db.Column(db.Date, unique=False, nullable=True)
+    requester_name = db.Column(db.String, db.ForeignKey('User.name'), nullable=False, unique=True)
+    lister_name = db.Column(db.String, db.ForeignKey('User.name'), nullable=False, unique=True)
+    location = db.Column(db.String, db.ForeignKey('Vehicle.location'), nullable=False, unique=False)
 
+    def serialize(self):
+            return {
+                "id": self.id,
+                "duration": self.duration,
+                "date": self.date,
+                "location": self.location,
+            }
 
 # what I need to add
 # messages between users - user_id, user_name, subject title, message, date (added)
