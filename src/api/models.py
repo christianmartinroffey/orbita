@@ -9,12 +9,8 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
-  
+    lister = db.Column(db.Boolean(), unique=False, nullable=False)
     phone_number = db.Column(db.String(40), unique=True, nullable=False)
-    role = db.Column(db.String(120), unique=True, nullable=False) #this should only have two options but can be both
-    #include logic later that when someone has created an 
-    #advert to publish to put an advert on their vehicle (click on 'offer an advertising space') they
-    #automatically have the 'host' role. 
 
     def __repr__(self):
         return f'<User {self.email}>'
@@ -39,7 +35,7 @@ class Message(db.Model):
     message = db.Column(db.String(240), unique=True, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False, unique=True)
     user_name = db.Column(db.String, db.ForeignKey('User.name'), nullable=False, unique=True)
-    date = db.Column(db.Date, unique=False, nullable=True)
+    date = db.Column(db.Date, unique=False, nullable=False)
     
 
     def serialize(self):
@@ -55,10 +51,10 @@ class Vehicle(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False, unique=True)
     owner_name = db.Column(db.String, db.ForeignKey('User.name'), nullable=False, unique=True)
-    vehicle_type = db.Column(db.String(120), unique=True, nullable=False) #e.g. car, bicycle, motorbike 
-    manufacturer = db.Column(db.String(120), unique=True, nullable=False)
-    model = db.Column(db.String(120), unique=True, nullable=False)
-    advertizing_spaces = db.Column(db.Integer, unique=True, nullable=False)
+    vehicle_type = db.Column(db.String(120), unique=False, nullable=False) #e.g. car, bicycle, motorbike 
+    manufacturer = db.Column(db.String(120), unique=False, nullable=False)
+    model = db.Column(db.String(120), unique=False, nullable=False)
+    advertizing_spaces = db.Column(db.Integer, unique=False, nullable=False)
     license_number = db.Column(db.String(40), unique=True, nullable=False)
     location = db.Column(db.String(80), unique=False, nullable=False)
 
@@ -78,9 +74,9 @@ class Business(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False, unique=True)
     owner_name = db.Column(db.String, db.ForeignKey('User.name'), nullable=False, unique=True)
-    business_name = db.Column(db.String(120), unique=True, nullable=False)
-    business_type = db.Column(db.String(120), unique=True, nullable=False) 
-    location = db.Column(db.String(120), unique=True, nullable=False)
+    business_name = db.Column(db.String(120), unique=False, nullable=False)
+    business_type = db.Column(db.String(120), unique=False, nullable=True) 
+    location = db.Column(db.String(120), unique=False, nullable=False)
     
     def serialize(self):
         return {
@@ -93,8 +89,8 @@ class Business(db.Model):
 # relational table for the listing from the vehicle owner
 class Listing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    duration = db.Column(db.Time, unique=False, nullable=False)
-    date = db.Column(db.Date, unique=False, nullable=True)
+    duration = db.Column(db.Time, unique=False, nullable=False) #how long they want to offer the advert for
+    start_date = db.Column(db.Date, unique=False, nullable=False)
     requester_name = db.Column(db.String, db.ForeignKey('User.name'), nullable=False, unique=True)
     lister_name = db.Column(db.String, db.ForeignKey('User.name'), nullable=False, unique=True)
     location = db.Column(db.String, db.ForeignKey('Vehicle.location'), nullable=False, unique=False)
