@@ -10,9 +10,8 @@ class User(db.Model):
     password = db.Column(db.String(80), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
     location = db.Column(db.String(80), unique=False, nullable=False)
-    role = db.Column(db.String(120), unique=True, nullable=False) 
-    phone_number = db.Column(db.String(40), primary_key=True)
-    #this should only have two options but can be both
+    phone_number = db.Column(db.String(40), unique=True, nullable=False)
+    role = db.Column(db.String(120), unique=True, nullable=False) #this should only have two options but can be both
     #include logic later that when someone has created an 
     #advert to publish to put an advert on their vehicle (click on 'offer an advertising space') they
     #automatically have the 'host' role. 
@@ -36,10 +35,10 @@ class User(db.Model):
 #initially should be to their own emails, later in app
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(120), unique=True, nullable=False)
+    title = db.Column(db.String(120), unique=False, nullable=False)
     message = db.Column(db.String(240), unique=True, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False, unique=True)
-    user_name = db.Column(db.Integer, db.ForeignKey('User.name'), nullable=False, unique=True)
+    user_name = db.Column(db.String, db.ForeignKey('User.name'), nullable=False, unique=True)
     date = db.Column(db.Date, unique=False, nullable=True)
     
 
@@ -54,19 +53,37 @@ class Message(db.Model):
 ## table with details on the vehicle that will have the advert
 class Vehicle(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    vehicle_type = db.Column(db.String(120), unique=True, nullable=False) 
+    owner_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False, unique=True)
+    owner_name = db.Column(db.String, db.ForeignKey('User.name'), nullable=False, unique=True)
+    vehicle_type = db.Column(db.String(120), unique=True, nullable=False) #e.g. car, bicycle, motorbike 
     manufacturer = db.Column(db.String(120), unique=True, nullable=False)
     model = db.Column(db.String(120), unique=True, nullable=False)
-    space = db.Column(db.Integer, unique=True, nullable=False)
+    advertizing_space = db.Column(db.Integer, unique=True, nullable=False)
+    license_number = db.Column(db.String(40), unique=True, nullable=False)
+
+#business
+class Business(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    owner_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False, unique=True)
+    owner_name = db.Column(db.String, db.ForeignKey('User.name'), nullable=False, unique=True)
+    business_type = db.Column(db.String(120), unique=True, nullable=False) 
+    location = db.Column(db.String(120), unique=True, nullable=False)
+    
     
 ## the hire offer business to vehicle owner
 class RequestDetails(db.Model):
-
+    id = db.Column(db.Integer, primary_key=True)
     duration = db.Column(db.Time, unique=False, nullable=False)
     date = db.Column(db.Date, unique=False, nullable=True)
+    requester_name = db.Column(db.String, db.ForeignKey('User.name'), nullable=False, unique=True)
+
+# relational table for the listing from the vehicle owner
+class Listing(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
 
 # what I need to add
-# messages between users - user_id, user_name, subject title, message, date
+# messages between users - user_id, user_name, subject title, message, date (added)
 # connect a payment processor to take payments?
 # user that is selling ad space - vehicle details, location, price requested, image
 # user that is wanting to buy ad space - duration, location, company name, company type
