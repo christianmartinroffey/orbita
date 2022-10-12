@@ -9,8 +9,8 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
-    lister = db.Column(db.Boolean(), unique=False, nullable=False)
-    phone_number = db.Column(db.String(40), unique=True, nullable=False)
+    lister = db.Column(db.Boolean(), unique=False, nullable=True)
+    phone_number = db.Column(db.String(40), unique=True, nullable=True)
 
     def __repr__(self):
         return f'<User {self.email}>'
@@ -24,7 +24,6 @@ class User(db.Model):
             "email": self.email,
             "phone_number": self.phone_number
 
-            # do not serialize the password, its a security breach
         }
 
 #table to collect and save data when people are messaging each other
@@ -52,8 +51,8 @@ class Vehicle(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=False, unique=True)
     owner_name = db.Column(db.String, db.ForeignKey('User.name'), nullable=False, unique=True)
     vehicle_type = db.Column(db.String(120), unique=False, nullable=False) #e.g. car, bicycle, motorbike 
-    manufacturer = db.Column(db.String(120), unique=False, nullable=False)
-    model = db.Column(db.String(120), unique=False, nullable=False)
+    vehicle_manufacturer = db.Column(db.String(120), unique=False, nullable=False)
+    vehicle_model = db.Column(db.String(120), unique=False, nullable=False)
     advertizing_spaces = db.Column(db.Integer, unique=False, nullable=False)
     license_number = db.Column(db.String(40), unique=True, nullable=False)
     location = db.Column(db.String(80), unique=False, nullable=False)
@@ -86,8 +85,25 @@ class Business(db.Model):
             "location": self.location,
         }
 
+#reviews
+class Reviews(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    booking_id = db.Column(db.Integer, db.ForeignKey('Booking.id'), nullable=False, unique=True)
+    rating = db.Column(db.Integer, nullable=False, unique=False)
+    comment = db.Column(db.String(240), unique=False, nullable=False)
+    
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "booking_id": self.booking_id,
+            "rating": self.rating,
+            "comment": self.comment,
+        }
+
+
 # relational table for the listing from the vehicle owner
-class Listing(db.Model):
+class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     duration = db.Column(db.Time, unique=False, nullable=False) #how long they want to offer the advert for
     start_date = db.Column(db.Date, unique=False, nullable=False)
