@@ -8,7 +8,7 @@ import validator from "validator";
 function Signup() {
   const { store, actions } = useContext(Context);
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const token = localStorage.getItem("token");
 //   const navigate = useNavigate();
@@ -19,7 +19,7 @@ function Signup() {
 
   // onclick handler to submit info to backend
   const handleClick = () => {
-    actions.createNewUser(email, username, password);
+    actions.createNewUser(email, name, password);
     actions.setEmail();
   };
 
@@ -53,17 +53,17 @@ const validateEmail = (e) => {
           <div className="text-danger">
             <span className="">{emailError}</span>
           </div>
-          <label className="form-label">Username</label>
+          <label className="form-label">Name</label>
           <input
             type="text"
             className="form-control"
             placeholder="username"
-            value={username}
+            value={name}
             onChange={(event) => setUsername(event.target.value)}
           />
           <div className="text-danger">
-            {username == "" || username.length < 2 ? (
-              <span>Username must be at least 2 characters long</span>
+            {name == "" || username.length < 2 ? (
+              <span>Name must be at least 2 characters long</span>
             ) : (
               <span></span>
             )}
