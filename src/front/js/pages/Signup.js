@@ -9,8 +9,14 @@ function Signup() {
   const { store, actions } = useContext(Context);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
   const [password, setPassword] = useState("");
+  const [lister, setLister ] = useState(false);
+  const [phone_number, setPhone_number] = useState("");
+
   const token = localStorage.getItem("token");
+
+
 //   const navigate = useNavigate();
   const isLoggedIn = isLoggedIn;
 
@@ -68,6 +74,34 @@ const validateEmail = (e) => {
               <span></span>
             )}
           </div>
+          {/* surname section */}
+          <label className="form-label">surname</label>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="surname"
+            value={surname}
+            onChange={(event) => setName(event.target.value)}
+          />
+           {/* phonenumber section */}
+           <label className="form-label">Phone Number</label>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Phone Number"
+            value={phone_number}
+            onChange={(event) => setName(event.target.value)}
+          />
+           {/* lister section */}
+           <label className="form-label">Are you going to add a listing?</label>
+          <input
+            type="checkbox"
+            className=""
+            placeholder="Lister"
+            value={lister}
+            onChange={(event) => setName(event.target.value)}
+          />
+          <br/>
           <label className="form-label">Password</label>
           <input
             type="password"

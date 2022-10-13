@@ -20,11 +20,12 @@ class User(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "location": self.location,
-            "role": self.role,
+            "surname": self.surname,
             "email": self.email,
+            "is_active": self.is_active,
+            "location": self.location,
+            "lister": self.lister,
             "phone_number": self.phone_number
-
         }
 
     
@@ -66,8 +67,8 @@ class Vehicle(db.Model):
         return {
             "id": self.id,
             "vehicle_type": self.vehicle_type,
-            "manufacturer": self.manufacturer,
-            "model": self.model,
+            "vehicle_manufacturer": self.vehicle_manufacturer,
+            "vehicle_model": self.vehicle_model,
             "advertizing_spaces": self.advertizing_spaces,
             "license_number": self.license_number,
             "location": self.location,
@@ -114,17 +115,19 @@ class Booking(db.Model):
     __tablename__ = "Booking"
     id = db.Column(db.Integer, primary_key=True)
     duration = db.Column(db.Time, unique=False, nullable=False) #how long they want to offer the advert for
-    start_date = db.Column(db.Date, unique=False, nullable=False)
+    start_date = db.Column(db.Date, unique=False, nullable=True)
     requester_name = db.Column(db.String, db.ForeignKey('User.name'), nullable=False, unique=True)
     lister_name = db.Column(db.String, db.ForeignKey('User.name'), nullable=False, unique=True)
-    location = db.Column(db.String, db.ForeignKey('Vehicle.location'), nullable=False, unique=False)
+    # location = db.Column(db.String, db.ForeignKey('Vehicle.location'), nullable=False, unique=False)
 
     def serialize(self):
             return {
                 "id": self.id,
                 "duration": self.duration,
-                "date": self.date,
-                "location": self.location,
+                "start_date": self.start_date,
+                "requester_name": self.requester_name,
+                "lister_name": self.lister_name,
+                # "location": self.location,
             }
 
 # what I need to add
