@@ -57,12 +57,12 @@ const validateEmail = (e) => {
           <input
             type="text"
             className="form-control"
-            placeholder="username"
+            placeholder="Name"
             value={name}
-            onChange={(event) => setUsername(event.target.value)}
+            onChange={(event) => setName(event.target.value)}
           />
           <div className="text-danger">
-            {name == "" || username.length < 2 ? (
+            {name == "" || name.length < 2 ? (
               <span>Name must be at least 2 characters long</span>
             ) : (
               <span></span>
@@ -91,7 +91,7 @@ const validateEmail = (e) => {
           <button
             className="btn btn-primary m-1 "
             onClick={handleClick}
-            disabled={password.length < 8 || username.length < 2}
+            disabled={password.length < 8 || name.length < 2}
           >
             {" "}
             Submit{" "}

@@ -74,6 +74,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ token: null, team: null, name: null, email: null });
 				localStorage.removeItem("team");
 			  },
+			  // making sure that enail is always set in the store when accessing the dashboard
+			  setEmail: () => {
+				const email = localStorage.getItem("email");
+				 console.log("getemail triggers", email);
+				 setStore({ email: email });
+			   },
 		}
 	};
 };

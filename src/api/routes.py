@@ -26,6 +26,35 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
+@api.route("/signup", methods=["POST"])
+def createNewUser():
+    request_body = request.get_json(force=True)
+    email = request_body['email']
+    name = request_body['name']
+    password = request_body['password']
+    hash_password = generate_password_hash(password)
+    is_active = True
+
+    try:
+        user = User(email=email, name=name, password=hash_password, is_active=is_active)
+    except exc.SQLAlchemyError: 
+        return jsonify("error creating the user"), 400
+    try:
+        db.session.add(user)
+    except exc.SQLAlchemyError: 
+        return jsonify("error adding the user"), 400
+    db.session.commit()
+
+    access_token = create_access_token(identity=email)
+    # send_welcome_email(user)
+    return jsonify({"msg": "sign up complete", "access_token" : access_token}), 201
+
+    # except SQLAlchemyError: 
+    #     return jsonify({"msg": "user already exists"}), 400
+        
+    #     pass
+
+    return jsonify({"msg": "error signing up"}), 401
 
 # id = db.Column(db.Integer, primary_key=True)
 #     name = db.Column(db.String(120), unique=True, nullable=False)
